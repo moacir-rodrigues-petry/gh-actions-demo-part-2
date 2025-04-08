@@ -61,4 +61,52 @@ jobs:
           find . -type f -exec du -b {} + | sort -n | tail -n 1
 ```
 
-3 - Generate a job with a matrix
+3 - Generate a job dependency
+
+`generate a job 2 that depends on job 1`
+
+With that we should be good, but let's increment, ask Copilot to print the date and time to validated that job 2 will run just after the job 1, something like this:
+
+`add a date and time print to validate that job2 ran after job1`
+
+The result should be like this:
+
+```yaml
+name: Job Dependency Example
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Print date and time for job1
+        run: |
+          echo "Job1 started at:"
+          date
+      - name: List smallest file
+        run: |
+          echo "Finding the smallest file in the repository:"
+          find . -type f -exec du -b {} + | sort -n | head -n 1
+
+  job2:
+    runs-on: ubuntu-latest
+    needs: job1
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Print date and time for job2
+        run: |
+          echo "Job2 started at:"
+          date
+      - name: List largest file
+        run: |
+          echo "Finding the largest file in the repository:"
+          find . -type f -exec du -b {} + | sort -n | tail -n 1
+```
+
+4 - Generate a job with a matrix
