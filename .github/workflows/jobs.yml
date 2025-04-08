@@ -1,29 +1,23 @@
-# generate a job to list all 3 last commits in the current directory and another one to count the total files in the current directory
-name: List Commits and files
+# generate a job to list the minor size file in the repo and the major size file
+name: List file size
 on:
   push:
     branches:
       - main
 
 jobs:
-  list_commits:
+  list_files:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: List commits
+      - name: List largest files
         run: |
-          echo "Listing the last 3 commits in the current directory:"
-          git log -3 --pretty=format:"%H"
+          echo "Listing the largest files in the repository:"
+          find . -type f -exec du -h {} + | sort -rh | head -n 10
 
-  count_files:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Count files
+      - name: List smallest files
         run: |
-          echo "Counting the total number of files in the current directory:"
-          find . -type f | wc -l
+          echo "Listing the smallest files in the repository:"
+          find . -type f -exec du -h {} + | sort -rh | tail -n 10
