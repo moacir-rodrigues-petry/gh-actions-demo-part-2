@@ -1,0 +1,20 @@
+# generate a job to list all commits in the current directory and all contributors
+name: List Commits and Contributors
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  list_commits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: List commits
+        run: |
+          echo "Listing commits in the current directory:"
+          git log --oneline
+          echo "Listing contributors:"
+          git shortlog -s -n
