@@ -12,7 +12,7 @@ jobs:
         run: |
           echo "This is the content of my-artifact.txt file." > my-artifact.txt
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: my-artifact
           path: my-artifact.txt
@@ -23,7 +23,7 @@ jobs:
     needs: Share-Data-With-Another-Job
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: my-artifact
       - name: List content of my-artifact.txt
