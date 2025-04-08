@@ -27,4 +27,38 @@ jobs:
           wc -l README.md
 ```
 
-2 -
+2 - Generate 2 jobs
+
+`generate a GitHub Actions job that lists the smallest and largest files in the repository by file size``
+
+This should be the result:
+
+```yaml
+name: List files by size
+on:
+  push:
+    branches:
+      - main
+jobs:
+  list_smallest_file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: List smallest file
+        run: |
+          echo "Finding the smallest file in the repository:"
+          find . -type f -exec du -b {} + | sort -n | head -n 1
+
+  list_largest_file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: List largest file
+        run: |
+          echo "Finding the largest file in the repository:"
+          find . -type f -exec du -b {} + | sort -n | tail -n 1
+```
+
+3 - Generate a job with a matrix

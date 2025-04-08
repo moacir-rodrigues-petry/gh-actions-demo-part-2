@@ -1,23 +1,26 @@
-# generate a job to list the minor size file in the repo and the major size file
-name: List file size
+# generate a GitHub Actions job that lists the smallest and largest files in the repository by file size
+name: List files by size
 on:
   push:
     branches:
       - main
-
 jobs:
-  list_files:
+  list_smallest_file:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: List largest files
+      - name: List smallest file
         run: |
-          echo "Listing the largest files in the repository:"
-          find . -type f -exec du -h {} + | sort -rh | head -n 10
+          echo "Finding the smallest file in the repository:"
+          find . -type f -exec du -b {} + | sort -n | head -n 1
 
-      - name: List smallest files
+  list_largest_file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: List largest file
         run: |
-          echo "Listing the smallest files in the repository:"
-          find . -type f -exec du -h {} + | sort -rh | tail -n 10
+          echo "Finding the largest file in the repository:"
+          find . -type f -exec du -b {} + | sort -n | tail -n 1
