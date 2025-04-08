@@ -109,4 +109,45 @@ jobs:
           find . -type f -exec du -b {} + | sort -n | tail -n 1
 ```
 
-4 - Generate a job with a matrix
+4 - Generate an artifact to share the result between jobs
+
+`generate a file called my-artifact.txt and put any info in it, create a job name 'Share-Data-With-Another-Job' to upload the artifact, create another job name 'Receiving-Data-From-Another-Job' to download the artifact, and list the content inside of it`
+
+This should be something like this:
+
+```yaml
+name: Artifact Example
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Share-Data-With-Another-Job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create my-artifact.txt
+        run: |
+          echo "This is the content of my-artifact.txt file." > my-artifact.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: my-artifact.txt
+          retention-days: 7
+
+  Receiving-Data-From-Another-Job:
+    runs-on: ubuntu-latest
+    needs: Share-Data-With-Another-Job
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: my-artifact
+      - name: List content of my-artifact.txt
+        run: |
+          echo "Content of my-artifact.txt:"
+          cat my-artifact.txt
+```
+
+5 - Generate a job that runs on a specific schedule

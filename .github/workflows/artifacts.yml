@@ -1,0 +1,32 @@
+name: Artifact Example
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Share-Data-With-Another-Job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create my-artifact.txt
+        run: |
+          echo "This is the content of my-artifact.txt file." > my-artifact.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: my-artifact.txt
+          retention-days: 7
+
+  Receiving-Data-From-Another-Job:
+    runs-on: ubuntu-latest
+    needs: Share-Data-With-Another-Job
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: my-artifact
+      - name: List content of my-artifact.txt
+        run: |
+          echo "Content of my-artifact.txt:"
+          cat my-artifact.txt
