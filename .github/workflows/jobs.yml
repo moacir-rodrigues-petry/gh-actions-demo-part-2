@@ -1,4 +1,4 @@
-# generate a job to list all commits in the current directory and another one to list all PRs
+# generate a job to list all 3 last commits in the current directory and another one to count the total files in the current directory
 name: List Commits and PRs
 on:
   push:
@@ -14,16 +14,16 @@ jobs:
 
       - name: List commits
         run: |
-          echo "Listing commits in the current directory:"
-          git log --oneline
+          echo "Listing the last 3 commits in the current directory:"
+          git log -3 --oneline
 
-  list_prs:
+  count_files:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: List PRs
+      - name: Count files
         run: |
-          echo "Listing PRs in the current directory:"
-          gh pr list --state all --json number,title,url --jq '.[] | "\(.number) \(.title) \(.url)"'
+          echo "Counting the total number of files in the current directory:"
+          find . -type f | wc -l
