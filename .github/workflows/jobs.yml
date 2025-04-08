@@ -1,5 +1,5 @@
-# generate a job to list all commits in the current directory and all contributors
-name: List Commits and Contributors
+# generate a job to list all commits in the current directory and another one to list all PRs
+name: List Commits and PRs
 on:
   push:
     branches:
@@ -16,5 +16,14 @@ jobs:
         run: |
           echo "Listing commits in the current directory:"
           git log --oneline
-          echo "Listing contributors:"
-          git shortlog -s -n
+
+  list_prs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: List PRs
+        run: |
+          echo "Listing PRs in the current directory:"
+          gh pr list --state all --json number,title,url --jq '.[] | "\(.number) \(.title) \(.url)"'
